@@ -1,5 +1,7 @@
 var https = require('https');
 https.post = require('https-post');
+const fs = require('fs');
+
 
 var appRouter = function (app) {
 
@@ -19,6 +21,11 @@ var appRouter = function (app) {
 
     app.post("/", function (req, res) {
         //res.send(req.body);
+        fs.appendFile('request.log', JSON.stringify(req.body)+"\n", function (err) {
+            if (err) throw err;
+            console.log('The "data to append" was appended to file!');
+        });
+
         https.post('https://us-central1-smart-comm.cloudfunctions.net/updateLocation',
             { "car": "001", "lat": req.body.lat, "long": req.body.long },
             function (res) {
